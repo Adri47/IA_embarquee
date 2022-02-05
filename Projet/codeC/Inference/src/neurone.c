@@ -1,20 +1,20 @@
 #include <math.h>
 #include "neurone.h"
 
-/*
-void calcul_neurone(float **poids, int nb_col_poids, int nb_ligne_poids, float *biais, int *pixel, float *y_neural)
+
+void calcul_neurone(float poids[][784], int nb_neural, float *biais, int *pixel, float *y_neural)
 {
     float somme = 0;
-    for (int y = 0 ; y < 128 ; y++)
+    for (int y = 0 ; y < nb_neural ; y++)
     {
         somme = 0;
         for (int i = 0 ; i < 784 ; i++)
         {
-            somme = somme + poids[i][y]*pixel[i];
+            somme = somme + poids[y][i]*pixel[i];
         }
     y_neural[y] = somme + biais[y];
     }
-}*/
+}
 
 void relu(float *donnee, int nb_donnee)
 {
@@ -24,24 +24,31 @@ void relu(float *donnee, int nb_donnee)
         {
             donnee[i] = 0;
         }
-        else
-        {
-            donnee[i] = donnee[i];
-        }
     }
 }
 
-void softmax(float *donnee, int nb_donnee)
-{
-    int somme = 0;
+void softmax(float* input, int size) {
 
-    for(int j = 0 ; j < nb_donnee - 1 ; j++)
-    {
-        for(int k = 0 ; k < nb_donnee - 1 ; k++)
-        {
-            somme = somme + expf(donnee[k]);
-        }
-        donnee[j] = donnee[j]/somme;
-        somme = 0;
-    }
+	
+
+	int i;
+	float m, sum, constant;
+
+	m = -INFINITY;
+	for (i = 0; i < size; ++i) {
+		if (m < input[i]) {
+			m = input[i];
+		}
+	}
+
+	sum = 0.0;
+	for (i = 0; i < size; ++i) {
+		sum += exp(input[i] - m);
+	}
+
+	constant = m + log(sum);
+	for (i = 0; i < size; ++i) {
+		input[i] = exp(input[i] - constant);
+	}
+
 }

@@ -13,9 +13,10 @@ Pour exécuter, tapez : ./all
 #include <stdio.h>
 #include <stdlib.h>
 #include "Bmp2Matrix.h"
+#include "neurone.h"
 
 
-FillMatrix(float matrix[][784],int size_r, int size_c,FILE*p)
+void FillMatrix(float matrix[][784],int size_r, int size_c,FILE*p)
 {
   float carac;
   for(int i=0; i<size_r;i++)
@@ -24,7 +25,7 @@ FillMatrix(float matrix[][784],int size_r, int size_c,FILE*p)
      {
         fscanf(p,"%f ",&carac);
         matrix[i][j]=carac;
-        printf("%d %d %f\n",i,j,carac);
+        //printf("%d %d %f\n",i,j,carac);
      }
    }
 }
@@ -37,15 +38,15 @@ void OpenFile(FILE**p, const char* path)
     printf("Erreur dans la lecture du fichiers\n");
   }else{
     printf("%s\n",path);
-    printf("lecture du fichiers\n");
+    printf("lecture du fichiers réussite\n");
   }
 }
 
-void LoadImageInVector(unsigned char *tab_image_vecteur, int len)
+void LoadImageInVector(int *tab_image_vecteur, int len)
 {
   BMP bitmap;
   FILE *pImage=NULL;
-  OpenFile(&pImage,"../../../Database/Prof/Images/bmpProcessedSeuil/0_1.bmp");
+  OpenFile(&pImage,"../../../Database/Prof/Images/bmpProcessedSeuil/8_1.bmp");
   LireBitmap(pImage, &bitmap);
   fclose(pImage);
   ConvertRGB2Gray(&bitmap);
@@ -61,11 +62,18 @@ void LoadImageInVector(unsigned char *tab_image_vecteur, int len)
 }
 
 int main(int argc, char* argv[]){
-   unsigned char tab_image_vecteur[784];
+   float carac;
+   int tab_image_vecteur[784];
+   float layer1_neural[128];
+   float layer2_neural[10];
    float poid1[128][784];
-   FILE* ppoid1=NULL;
    float poid2[10][784];
+   float biais1[128];
+   float biais2[10];
+   FILE* ppoid1=NULL;
    FILE* ppoid2=NULL;
+   FILE* pbiais1=NULL;
+   FILE* pbiais2=NULL;
    LoadImageInVector(tab_image_vecteur,784);
    OpenFile(&ppoid1,"../files/poids_1.txt");
    FillMatrix(poid1,128,784,ppoid1);
@@ -74,52 +82,33 @@ int main(int argc, char* argv[]){
    FillMatrix(poid2,10,784,ppoid2);
    fclose(ppoid2);
 
-   
-   //float **poid2;
-   //float *biais1;
-   //float *biais2;
-   //BMP bitmap;
-   //FILE *pImage=NULL;
-   //FILE* ppoid1=NULL;
-   //FILE* ppoid2=NULL;
-   //pImage=fopen("../../../Database/Prof/Images/bmpProcessedSeuil/0_1.bmp", "rb");
-   //OpenFile(&pImage,"../../../Database/Prof/Images/bmpProcessedSeuil/0_1.bmp");
-  
-   //ppoid1=fopen("poids_1.txt", "r");
-  // ppoid2=fopen("poids_2.txt", "r");
-   
-   //LireBitmap(pImage, &bitmap);
-  
-   //fclose(pImage);
-   /*
-   ConvertRGB2Gray(&bitmap);  
-   printf("%d\n", bitmap.mPixelsGray[10][10]);
-   for(int i = 0 ;i<28;i++){
-      for(int j = 0 ;j<28;j++){
-        tab_image_vecteur[i*28+j]= (bitmap.mPixelsGray[i][j])/225;
-        //printf("%d\n",i*28+j);
-        printf("%d", tab_image_vecteur[i*28+j]);
-      }
+   OpenFile(&pbiais1,"../files/biais_1.txt");
+   for(int i = 0 ;i<128;i++){
+     fscanf(pbiais1,"%f ",&carac);
+     biais1[i]=carac;
    }
-    printf("\n");*/
-   /*for(int i = 0 ;i<783;i++){
-     printf("%d",tab_image_vecteur[i]);
-   }*/
-   //printf("\n");
+   fclose(pbiais1);
 
-  //FillMatrix(poid1,128,784,ppoid1);
-  //printf("%f\n",poid1[0][0]);
-  //printf("%f\n",poid1[127][783]);
-  //FillMatrix(poid1,128,784,ppoid2);
-   
-  
-   
-  
-   
+   OpenFile(&pbiais2,"../files/biais_2.txt");
+   for(int i = 0 ;i<10;i++){
+     fscanf(pbiais2,"%f ",&carac);
+     biais2[i]=carac;
+   }
+   fclose(pbiais2);
+   calcul_neurone(poid1,128,biais1,tab_image_vecteur,layer1_neural);
+   relu(layer1_neural,128);
 
-
-   //fclose(ppoid1);
-   //fclose(ppoid2);
-   //DesallouerBMP(&bitmap);
+   calcul_neurone(poid2,10,biais2,tab_image_vecteur,layer2_neural);
+   softmax(layer2_neural,10);
+   printf("layer1_neural\n\n");
+   for(int i = 0 ;i<128;i++){
+     printf("%f ",layer1_neural[i]);
+   }
+   printf("\n\n");
+   printf("layer2_neural\n\n");
+   for(int i = 0 ;i<10;i++){
+     printf("%f ",layer2_neural[i]);
+   }
+   printf("\n\n");
   return 0;
 }
