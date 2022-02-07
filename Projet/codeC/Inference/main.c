@@ -63,7 +63,7 @@ int main(int argc, char* argv[]){
 
    nom_fichier=argv[1];
    LoadImageInVector(tab_image_vecteur_float,784,nom_fichier);
-   OpenFile(&ppoid1,"../files/poids_1.txt");
+   OpenFile(&ppoid1,"files/poids_1.txt");
    for(int i=0; i<128;i++)
     {
       for(int j=0; j<784;j++)
@@ -74,7 +74,7 @@ int main(int argc, char* argv[]){
       }
     }
   fclose(ppoid1);
-  OpenFile(&ppoid2,"../files/poids_2.txt");
+  OpenFile(&ppoid2,"files/poids_2.txt");
   for(int i=0; i<10;i++)
    {
      for(int j=0; j<128;j++)
@@ -86,7 +86,7 @@ int main(int argc, char* argv[]){
    }
    fclose(ppoid2);
    
-   OpenFile(&pbiais1,"../files/biais_1.txt");
+   OpenFile(&pbiais1,"files/biais_1.txt");
    for(int i = 0 ;i<128;i++){
      fscanf(pbiais1,"%f ",&carac);
      biais1[i]=carac;
@@ -94,7 +94,7 @@ int main(int argc, char* argv[]){
    }
    fclose(pbiais1);
 
-   OpenFile(&pbiais2,"../files/biais_2.txt");
+   OpenFile(&pbiais2,"files/biais_2.txt");
    for(int i = 0 ;i<10;i++){
      fscanf(pbiais2,"%f ",&carac);
      biais2[i]=carac;
