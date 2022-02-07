@@ -1,18 +1,22 @@
 #include <math.h>
 #include "neurone.h"
+#include <stdio.h>
 
-
-void calcul_neurone(float poids[][784], int nb_neural, float *biais, int *pixel, float *y_neural)
+void calcul_neurone(float poids[][784],int nbpoid, int nb_neural, float *biais, float *pixel, float *y_neural)
 {
-    float somme = 0;
+  
     for (int y = 0 ; y < nb_neural ; y++)
     {
-        somme = 0;
-        for (int i = 0 ; i < 784 ; i++)
+      
+        y_neural[y] =0;
+        for (int i = 0 ; i < nbpoid ; i++)
         {
-            somme = somme + poids[y][i]*pixel[i];
+            y_neural[y] += poids[y][i]*pixel[i];
+            //printf("%f y=%d i=%d\n",poids[y][i] ,y,i);
+            //printf("%f y=%d i=%d\n",pixel[i] ,y,i);
         }
-    y_neural[y] = somme + biais[y];
+    y_neural[y] += biais[y];
+      //printf("%f ",y_neural[y]);
     }
 }
 

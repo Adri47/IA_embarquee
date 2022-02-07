@@ -42,17 +42,17 @@ void OpenFile(FILE**p, const char* path)
   }
 }
 
-void LoadImageInVector(int *tab_image_vecteur, int len)
+void LoadImageInVector(float *tab_image_vecteur, int len)
 {
   BMP bitmap;
   FILE *pImage=NULL;
-  OpenFile(&pImage,"../../../Database/Prof/Images/bmpProcessedSeuil/8_1.bmp");
+  OpenFile(&pImage,"../../../Database/Prof/Images/bmpProcessedSeuil/0_0.bmp");
   LireBitmap(pImage, &bitmap);
   fclose(pImage);
   ConvertRGB2Gray(&bitmap);
    for(int i = 0 ;i<28;i++){
       for(int j = 0 ;j<28;j++){
-        tab_image_vecteur[i*28+j]= (bitmap.mPixelsGray[i][j])/225;
+        tab_image_vecteur[i*28+j]= (float)(bitmap.mPixelsGray[i][j])/255;
         //printf("%d\n",i*28+j);
         //printf("%d", tab_image_vecteur[i*28+j]);
       }
@@ -63,7 +63,7 @@ void LoadImageInVector(int *tab_image_vecteur, int len)
 
 int main(int argc, char* argv[]){
    float carac;
-   int tab_image_vecteur[784];
+   float tab_image_vecteur_float[784];
    float layer1_neural[128];
    float layer2_neural[10];
    float poid1[128][784];
@@ -74,18 +74,18 @@ int main(int argc, char* argv[]){
    FILE* ppoid2=NULL;
    FILE* pbiais1=NULL;
    FILE* pbiais2=NULL;
-   LoadImageInVector(tab_image_vecteur,784);
+   LoadImageInVector(tab_image_vecteur_float,784);
    OpenFile(&ppoid1,"../files/poids_1.txt");
    FillMatrix(poid1,128,784,ppoid1);
    fclose(ppoid1);
    OpenFile(&ppoid2,"../files/poids_2.txt");
-   FillMatrix(poid2,10,784,ppoid2);
+   FillMatrix(poid1,10,128,ppoid1);
    fclose(ppoid2);
-
    OpenFile(&pbiais1,"../files/biais_1.txt");
    for(int i = 0 ;i<128;i++){
      fscanf(pbiais1,"%f ",&carac);
      biais1[i]=carac;
+     //printf("%d %f\n",i,biais1[i]);
    }
    fclose(pbiais1);
 
@@ -93,12 +93,18 @@ int main(int argc, char* argv[]){
    for(int i = 0 ;i<10;i++){
      fscanf(pbiais2,"%f ",&carac);
      biais2[i]=carac;
+     //printf("%d %f\n",i,biais2[i]);
    }
    fclose(pbiais2);
-   calcul_neurone(poid1,128,biais1,tab_image_vecteur,layer1_neural);
-   relu(layer1_neural,128);
+   
 
-   calcul_neurone(poid2,10,biais2,tab_image_vecteur,layer2_neural);
+
+   calcul_neurone(poid1,784,128,biais1,tab_image_vecteur_float,layer1_neural);
+  
+   relu(layer1_neural,128);
+   
+   
+   calcul_neurone(poid2,128,10,biais2,layer1_neural,layer2_neural);
    softmax(layer2_neural,10);
    printf("layer1_neural\n\n");
    for(int i = 0 ;i<128;i++){
