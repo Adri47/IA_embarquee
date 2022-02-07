@@ -15,21 +15,6 @@ Pour exécuter, tapez : ./all
 #include "Bmp2Matrix.h"
 #include "neurone.h"
 
-
-void FillMatrix(float matrix[][784],int size_r, int size_c,FILE*p)
-{
-  float carac;
-  for(int i=0; i<size_r;i++)
-   {
-     for(int j=0; j<size_c;j++)
-     {
-        fscanf(p,"%f ",&carac);
-        matrix[i][j]=carac;
-        //printf("%d %d %f\n",i,j,carac);
-     }
-   }
-}
-
 void OpenFile(FILE**p, const char* path)
 {
   *p=fopen(path,"rb");
@@ -76,11 +61,28 @@ int main(int argc, char* argv[]){
    FILE* pbiais2=NULL;
    LoadImageInVector(tab_image_vecteur_float,784);
    OpenFile(&ppoid1,"../files/poids_1.txt");
-   FillMatrix(poid1,128,784,ppoid1);
-   fclose(ppoid1);
-   OpenFile(&ppoid2,"../files/poids_2.txt");
-   FillMatrix(poid1,10,128,ppoid1);
+   for(int i=0; i<128;i++)
+    {
+      for(int j=0; j<784;j++)
+      {
+          fscanf(ppoid1,"%f ",&carac);
+          poid1[i][j]=carac;
+          //printf("%d %d %f\n",i,j,poid1[i][j]);
+      }
+    }
+  fclose(ppoid1);
+  OpenFile(&ppoid2,"../files/poids_2.txt");
+  for(int i=0; i<10;i++)
+   {
+     for(int j=0; j<128;j++)
+     {
+        fscanf(ppoid2,"%f ",&carac);
+        poid2[i][j]=carac;
+        //printf("%d %d %f\n",i,j,poid1[i][j]);
+     }
+   }
    fclose(ppoid2);
+   
    OpenFile(&pbiais1,"../files/biais_1.txt");
    for(int i = 0 ;i<128;i++){
      fscanf(pbiais1,"%f ",&carac);
@@ -96,14 +98,8 @@ int main(int argc, char* argv[]){
      //printf("%d %f\n",i,biais2[i]);
    }
    fclose(pbiais2);
-   
-
-
    calcul_neurone(poid1,784,128,biais1,tab_image_vecteur_float,layer1_neural);
-  
    relu(layer1_neural,128);
-   
-   
    calcul_neurone(poid2,128,10,biais2,layer1_neural,layer2_neural);
    softmax(layer2_neural,10);
    printf("layer1_neural\n\n");
