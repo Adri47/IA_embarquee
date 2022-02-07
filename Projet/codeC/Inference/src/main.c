@@ -27,11 +27,11 @@ void OpenFile(FILE**p, const char* path)
   }
 }
 
-void LoadImageInVector(float *tab_image_vecteur, int len)
+void LoadImageInVector(float *tab_image_vecteur, int len,char *nom_fichier)
 {
   BMP bitmap;
   FILE *pImage=NULL;
-  OpenFile(&pImage,"../../../Database/Prof/Images/bmpProcessedSeuil/0_0.bmp");
+  OpenFile(&pImage,nom_fichier);
   LireBitmap(pImage, &bitmap);
   fclose(pImage);
   ConvertRGB2Gray(&bitmap);
@@ -59,7 +59,10 @@ int main(int argc, char* argv[]){
    FILE* ppoid2=NULL;
    FILE* pbiais1=NULL;
    FILE* pbiais2=NULL;
-   LoadImageInVector(tab_image_vecteur_float,784);
+   char *nom_fichier;
+
+   nom_fichier=argv[1];
+   LoadImageInVector(tab_image_vecteur_float,784,nom_fichier);
    OpenFile(&ppoid1,"../files/poids_1.txt");
    for(int i=0; i<128;i++)
     {
