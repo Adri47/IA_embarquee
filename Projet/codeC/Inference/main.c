@@ -19,11 +19,11 @@ void OpenFile(FILE**p, const char* path)
 {
   *p=fopen(path,"rb");
   if(p==NULL){
-    printf("%s\n",path);
-    printf("Erreur dans la lecture du fichiers\n");
+    //printf("%s\n",path);
+    //printf("Erreur dans la lecture du fichiers\n");
   }else{
-    printf("%s\n",path);
-    printf("lecture du fichiers réussite\n");
+    //printf("%s\n",path);
+    //printf("lecture du fichiers réussite\n");
   }
 }
 
@@ -105,15 +105,20 @@ int main(int argc, char* argv[]){
    relu(layer1_neural,128);
    calcul_neurone(poid2,128,10,biais2,layer1_neural,layer2_neural);
    softmax(layer2_neural,10);
-   printf("layer1_neural\n\n");
+   //printf("layer1_neural\n\n");
    for(int i = 0 ;i<128;i++){
-     printf("%f ",layer1_neural[i]);
+     //printf("%f ",layer1_neural[i]);
    }
-   printf("\n\n");
-   printf("layer2_neural\n\n");
+   //printf("\n\n");
+   //printf("layer2_neural\n\n");
+   float probaMax =0;
+   int valeurChiffre=0;
    for(int i = 0 ;i<10;i++){
-     printf("%f ",layer2_neural[i]);
+     if(layer2_neural[i]> probaMax){
+        probaMax =layer2_neural[i];
+        valeurChiffre =i;
+     }
    }
-   printf("\n\n");
+   printf("Valeur Prédite est : %d avec une proba de %f\n ",valeurChiffre,probaMax);
   return 0;
 }

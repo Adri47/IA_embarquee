@@ -124,7 +124,9 @@ cur=ftell(pFichier);
 fseek(pFichier, 0, SEEK_END);
 end=ftell(pFichier);
 
-if (cur==end)
-  printf("Le fichier est bien termine\n");
+if (cur==end){
+  //printf("Le fichier est bien termine\n");
+}
+  
 
 }
