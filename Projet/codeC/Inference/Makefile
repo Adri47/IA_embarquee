@@ -9,7 +9,7 @@ CFLAGS = -std=c99 -Wall
 #Version materielle
 INCLDIRS =
 LIBDIRS =
--lSDL2main -lSDL2 
+
 LIBS64 = -lm
 
 SRCS = $(wildcard *.c)
