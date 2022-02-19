@@ -4,7 +4,6 @@
 
 void calcul_neurone(float poids[][784],int nbpoid, int nb_neural, float *biais, float *pixel, float *y_neural)
 {
-  
     for (int y = 0 ; y < nb_neural ; y++)
     {
       
@@ -14,6 +13,7 @@ void calcul_neurone(float poids[][784],int nbpoid, int nb_neural, float *biais, 
             y_neural[y] += poids[y][i]*pixel[i];
             //printf("%f y=%d i=%d\n",poids[y][i] ,y,i);
             //printf("%f y=%d i=%d\n",pixel[i] ,y,i);
+           // printf("%f ",y_neural[y]);
         }
     y_neural[y] += biais[y];
       //printf("%f ",y_neural[y]);
@@ -32,9 +32,6 @@ void relu(float *donnee, int nb_donnee)
 }
 
 void softmax(float* input, int size) {
-
-	
-
 	int i;
 	float m, sum, constant;
 

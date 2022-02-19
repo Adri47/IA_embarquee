@@ -30,7 +30,7 @@ int main(int argc, const char * argv[]) {
        int chiffreDebut=0;
        int chiffreFin=9;
        int quantiteDebut=0;
-       int quantiteFin=20;
+       int quantiteFin=0;
        unsigned char valeurSeuil=100;
        int maxOuMin=1;
        int masque=0;

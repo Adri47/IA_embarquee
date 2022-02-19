@@ -14,19 +14,19 @@ Pour exécuter, tapez : ./all
 #include <stdlib.h>
 #include "Bmp2Matrix.h"
 #include "neurone.h"
-
+//Fonction pour ouvrir un fichier
 void OpenFile(FILE**p, const char* path)
 {
   *p=fopen(path,"rb");
   if(p==NULL){
-    //printf("%s\n",path);
-    //printf("Erreur dans la lecture du fichiers\n");
+    printf("%s\n",path);
+    printf("Erreur dans la lecture du fichiers\n");
   }else{
-    //printf("%s\n",path);
-    //printf("lecture du fichiers réussite\n");
+    printf("%s\n",path);
+    printf("lecture du fichiers réussite\n");
   }
 }
-
+//Fonction pour vectoriser l'image
 void LoadImageInVector(float *tab_image_vecteur, int len,char *nom_fichier)
 {
   BMP bitmap;
@@ -39,7 +39,7 @@ void LoadImageInVector(float *tab_image_vecteur, int len,char *nom_fichier)
       for(int j = 0 ;j<28;j++){
         tab_image_vecteur[i*28+j]= (float)(bitmap.mPixelsGray[i][j])/255;
         //printf("%d\n",i*28+j);
-        //printf("%d", tab_image_vecteur[i*28+j]);
+        //printf("%f ", tab_image_vecteur[i*28+j]);
       }
    }
     //printf("\n");
@@ -63,6 +63,7 @@ int main(int argc, char* argv[]){
 
    nom_fichier=argv[1];
    LoadImageInVector(tab_image_vecteur_float,784,nom_fichier);
+   //Récupération du poids1
    OpenFile(&ppoid1,"files/poids_1.txt");
    for(int i=0; i<128;i++)
     {
@@ -74,6 +75,7 @@ int main(int argc, char* argv[]){
       }
     }
   fclose(ppoid1);
+  //Récupération du poids2
   OpenFile(&ppoid2,"files/poids_2.txt");
   for(int i=0; i<10;i++)
    {
@@ -85,7 +87,7 @@ int main(int argc, char* argv[]){
      }
    }
    fclose(ppoid2);
-   
+   //Récupération du biai1
    OpenFile(&pbiais1,"files/biais_1.txt");
    for(int i = 0 ;i<128;i++){
      fscanf(pbiais1,"%f ",&carac);
@@ -93,7 +95,7 @@ int main(int argc, char* argv[]){
      //printf("%d %f\n",i,biais1[i]);
    }
    fclose(pbiais1);
-
+   //Récupération du biai2
    OpenFile(&pbiais2,"files/biais_2.txt");
    for(int i = 0 ;i<10;i++){
      fscanf(pbiais2,"%f ",&carac);
@@ -101,16 +103,24 @@ int main(int argc, char* argv[]){
      //printf("%d %f\n",i,biais2[i]);
    }
    fclose(pbiais2);
+   //Calcul de la première couche de neurone
    calcul_neurone(poid1,784,128,biais1,tab_image_vecteur_float,layer1_neural);
+   //Fonction d'activation relu
    relu(layer1_neural,128);
+   //Calcul de la deuxième couche de neurone
    calcul_neurone(poid2,128,10,biais2,layer1_neural,layer2_neural);
+   //Fonction sodtmax
    softmax(layer2_neural,10);
-   //printf("layer1_neural\n\n");
+   /*printf("layer1_neural\n\n");
    for(int i = 0 ;i<128;i++){
-     //printf("%f ",layer1_neural[i]);
+     printf("%f ",layer1_neural[i]);
    }
-   //printf("\n\n");
-   //printf("layer2_neural\n\n");
+   printf("\n\n");
+   printf("layer2_neural\n\n");
+  for(int i = 0 ;i<10;i++){
+     printf("%f ",layer2_neural[i]);
+   }*/
+  //Affichage du résultat
    float probaMax =0;
    int valeurChiffre=0;
    for(int i = 0 ;i<10;i++){
@@ -119,6 +129,7 @@ int main(int argc, char* argv[]){
         valeurChiffre =i;
      }
    }
-   printf("Valeur Prédite est : %d avec une proba de %f\n ",valeurChiffre,probaMax);
+  printf("\n");
+  printf("Valeur Prédite est : %d avec une proba de %f\n ",valeurChiffre,probaMax);
   return 0;
 }
