@@ -1,15 +1,14 @@
 IA Embarquee
 
 Compilation et execution
-	1) Créer un dossier build
-	2) Entrer les commandes suivantes :
-		$cd build/
-		$cmake
-	3) Compiler le projet :
+	1) $make clean
+
+	2) Compiler le projet
 	   $make all
-	4) Executer le projet :
-	   $./ProjetIA
-	   
+
+	3) Executer le projet :
+	   $./all ../../Database/Prof/Images/bmpProcessedSeuil/0_0.bmp
+		
 Connexion et copie de fichiers vers raspberry :
 
 	$ssh login@ssh.enseirb.fr #connexion ssh enseirb
