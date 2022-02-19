@@ -2,3 +2,7 @@
 bin/*
 Projet/codeC/Inference/build/*
 .vscode/*
+*.o
+Projet/codeC/Inference/all
+Projet/codeC/Lecture/all
+Projet/codeC/Traitement/all
